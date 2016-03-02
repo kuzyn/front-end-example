@@ -1,0 +1,11 @@
+{
+  "name": "scousin-evt-fe-challenge",
+  "description": "Samuel Cousin / Angular, jQuery, Bootstrap",
+  "private": true,
+  "dependencies": {
+    "jquery": "~2.2.0",
+    "bootstrap": "~3.3.6",
+    "angular": "~1.4.8",
+    "angular-chart.js": "~0.8.8"
+  }
+}
