@@ -1,0 +1,26 @@
+{
+  "name": "scousin-evt-fe-challenge",
+  "version": "0.0.1",
+  "description": "Samuel Cousin / Angular, jQuery, Bootstrap",
+  "main": "./app.concat.js",
+  "dependencies": {},
+  "devDependencies": {
+    "browser-sync": "^2.11.1",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-notify": "^2.2.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kuzyn/front-end-example.git"
+  },
+  "author": "kuzyn (Samuel Cousin)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kuzyn/front-end-example/issues"
+  },
+  "homepage": "https://github.com/kuzyn/front-end-example#readme"
+}

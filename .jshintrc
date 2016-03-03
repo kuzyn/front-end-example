@@ -15,5 +15,10 @@
 
 	"node": 			true,
 	"jquery":			true,
-	"browser":		true
+	"browser":		true,
+
+	"predef": [ "evtApp" ],
+	"globals":{
+		"angular": true
+	}
 }
