@@ -1,4 +1,3 @@
-(function(){
 var evtApp = angular.module('evtApp', []);
 
 evtApp.run(function($rootScope, localdata){
@@ -19,7 +18,17 @@ evtApp.factory('localdata', function($timeout, $http) {
     };
     return request;
 });
-})();
+
+evtApp.directive('datepicker', function() {
+  return {
+        restrict: 'E',
+        templateUrl: './app/shared/datepicker/datepickerView.html',
+        scope: {},
+        controller: function() {
+          console.log("picker-booma!");
+        }
+    };
+});
 
 evtApp.controller('chartController', function(){
 });
@@ -36,24 +45,14 @@ evtApp.directive('chart', function() {
 });
 
 evtApp.controller('tableController', function($rootScope, $scope){
-  $scope.data = $rootScope;
+  $scope.data = $rootScope.data;
+  $scope.rowLimit = 10;
 });
 
 evtApp.directive('datatable', function() {
   return {
         restrict: 'E',
-        template: '<p>datatable!{{data[0]}}</p>',
+        templateUrl: './app/components/datatable/datatableView.html',
         controller: 'tableController'
-    };
-});
-
-evtApp.directive('datepicker', function() {
-  return {
-        restrict: 'E',
-        templateUrl: './app/shared/datepicker/datepickerView.html',
-        scope: {},
-        controller: function() {
-          console.log("picker-booma!");
-        }
     };
 });

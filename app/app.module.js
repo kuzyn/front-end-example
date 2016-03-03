@@ -1,4 +1,3 @@
-(function(){
 var evtApp = angular.module('evtApp', []);
 
 evtApp.run(function($rootScope, localdata){
@@ -19,4 +18,3 @@ evtApp.factory('localdata', function($timeout, $http) {
     };
     return request;
 });
-})();

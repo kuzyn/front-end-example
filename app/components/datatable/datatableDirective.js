@@ -1,7 +1,7 @@
 evtApp.directive('datatable', function() {
   return {
         restrict: 'E',
-        template: '<p>datatable!{{data[0]}}</p>',
+        templateUrl: './app/components/datatable/datatableView.html',
         controller: 'tableController'
     };
 });

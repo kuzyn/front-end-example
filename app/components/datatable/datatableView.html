@@ -1,0 +1,25 @@
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>City</th>
+      <th>Start Date</th>
+      <th>End Date</th>
+      <th>Price</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="row in data | limitTo:rowLimit">
+      <th scope="row">{{row.id}}</th>
+      <td>{{row.city}}</td>
+      <td>{{row.start_date}}</td>
+      <td>{{row.end_date}}</td>
+      <td>{{row.price}}</td>
+      <td>{{row.status}}</td>
+    </tr>
+  </tbody>
+</table>
+<a class="btn btn-default">load more</a>
+
+<!-- {"id":1,"city":"Neftegorsk","start_date":"4/13/2013","end_date":"5/18/2013","price":"55.82","status":"Seldom","color":"#fd4e19"} -->
