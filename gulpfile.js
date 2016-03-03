@@ -27,7 +27,7 @@ gulp.task('scripts', function() {
 
 // our default task
 gulp.task('default', ['browser-sync'], function () {
-	gulp.watch('./index.html', bs.reload);
+	gulp.watch(['./index.html', './app/**/*.html'], bs.reload);
 	gulp.watch(['./app/**/*.js'], ['scripts']);
 	gulp.watch('./app.concat.js', bs.reload);
 	gulp.watch('./assets/**/*.*', bs.reload);
