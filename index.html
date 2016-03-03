@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html ng-app>
-  <head>
+<html ng-app="evtApp">
 
+
+  <head>
     <meta charset="utf-8">
     <title>Samuel Cousin / Angular, jQuery, Bootstrap</title>
 
@@ -9,10 +10,11 @@
     <script src="bower_components/jquery/dist/jquery.min.js" charset="utf-8"></script>
     <script src="bower_components/Chart.js/Chart.min.js" charset="utf-8"></script>
 
-    <script async src="app/app.js" charset="utf-8"></script>
     <script async src="bower_components/bootstrap/dist/js/bootstrap.min.js" charset="utf-8"></script>
     <script async src="bower_components/angular-chart.js/dist/angular-chart.min.js" charset="utf-8"></script>
 
+    <script defer src="app/app.module.js" charset="utf-8"></script>
+    <!-- <script defer src="app.concat.js" charset="utf-8"></script> -->
     <script defer src="assets/js/front.js" charset="utf-8"></script>
 
     <link rel="stylesheet" href="bower_components/angular-chart.js/dist/angular-chart.min.css" media="screen" charset="utf-8">
@@ -20,11 +22,25 @@
     <link rel="stylesheet" href="assets/css/styles.css" media="screen" charset="utf-8">
 
     <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
-
   </head>
+
+
   <body>
 
-    <h1>ready {{'fred' + 'dy'}}</h1>
+    <div class="container">
+      <h1>ready {{'fred' + 'dy'}}</h1>
+    </div>
+
+    <div class="container">
+      <datepicker></datepicker>
+      <datatable></datatable>
+    </div>
+
+    <div class="container">
+      <chart></chart>
+    </div>
 
   </body>
+
+
 </html>
