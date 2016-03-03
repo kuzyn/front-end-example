@@ -1,1 +1,2 @@
-
+evtApp.controller('chartController', function(){
+});
