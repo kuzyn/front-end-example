@@ -1,9 +1,11 @@
 var evtApp = angular.module('evtApp', []);
 
-evtApp.run(function($rootScope, localdata){
-    localdata.fetch().then(function(data) {
-      $rootScope.data = data;
-    });
+evtApp.run(function(){
+});
+
+// Set up the cache ‘myCache’
+evtApp.factory('myCache', function($cacheFactory) {
+ return $cacheFactory('myData');
 });
 
 evtApp.factory('localdata', function($timeout, $http) {

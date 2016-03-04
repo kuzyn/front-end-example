@@ -4,7 +4,7 @@
 
 var gulp = require('gulp');
 var concat = require('gulp-concat');
-var notify = require('gulp-notify');
+// var notify = require('gulp-notify');
 var bs = require('browser-sync').create();
 
 // initiating our browser-sync task
@@ -21,7 +21,7 @@ gulp.task('browser-sync', function() {
 gulp.task('scripts', function() {
   return gulp.src(['./app/**/*.js'])
     .pipe(concat('app.concat.js'))
-    .pipe(notify("Updated <%= file.relative %>"))
+    // .pipe(notify("Updated <%= file.relative %>"))
     .pipe(gulp.dest('./'));
 });
 
