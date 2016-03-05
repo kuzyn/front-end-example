@@ -1,5 +1,4 @@
-var evtApp = angular.module('evtApp', []);
-
+var evtApp = angular.module('evtApp', ['txx.diacritics']);
 evtApp.run(function(){
 });
 

@@ -1,4 +1,4 @@
-evtApp.controller('tableController', function($scope, myCache, localdata){
+evtApp.controller('tableController', function($scope, myCache, localdata, removeDiacritics){
   $scope.rowLimit = 10;
   $scope.orderKey = 'id';
 
@@ -27,9 +27,10 @@ evtApp.controller('tableController', function($scope, myCache, localdata){
   else { // Otherwise, let’s generate a new instance
     localdata.fetch().then(function(response) {
       angular.forEach(response, function (row) { // we parse our dates & floats
-       row.price = parseFloat(row.price).toFixed(2);
-       row.start_date = Date.parse(row.start_date);
-       row.end_date = Date.parse(row.end_date);
+        row.city = removeDiacritics.replace(row.city);
+        row.price = parseFloat(row.price).toFixed(2);
+        row.start_date = Date.parse(row.start_date);
+        row.end_date = Date.parse(row.end_date);
       });
       myCache.put('data', response);
       $scope.jsonData = myCache.get('data');
