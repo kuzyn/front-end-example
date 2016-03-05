@@ -27,7 +27,10 @@ evtApp.controller('tableController', function($scope, myCache, localdata, remove
   else { // Otherwise, let’s generate a new instance
     localdata.fetch().then(function(response) {
       angular.forEach(response, function (row) { // we parse our dates & floats
-        row.city = removeDiacritics.replace(row.city);
+        if (!row.city.charAt(0).match(/\w/)) {
+          var splitString = row.city.match(/(.)(.+)/);
+          row.city = removeDiacritics.replace(splitString[1]) + splitString[2]; // only remove the diacritic from the leading char
+        }
         row.price = parseFloat(row.price).toFixed(2);
         row.start_date = Date.parse(row.start_date);
         row.end_date = Date.parse(row.end_date);
