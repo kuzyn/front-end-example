@@ -1,114 +1,129 @@
-var evtApp = angular.module('evtApp', ['txx.diacritics']);
-evtApp.run(function(){
+// module
+var evtApp = angular.module('evtApp', ['txx.diacritics', 'chart.js']);
+
+// INIT
+evtApp.run(function($rootScope, $rootElement, localdata) {
+  $rootScope.appName = $rootElement.attr('ng-app');
+  localdata.fetch().then(function(response) {
+    $rootScope.jsonData = response;
+  });
 });
 
-// Set up the cache ‘myCache’
-evtApp.factory('myCache', function($cacheFactory) {
- return $cacheFactory('myData');
+
+// FACTORIES
+evtApp.factory('localdata', function($timeout, $http, removeDiacritics) {
+  var promise = {
+    fetch: function() {
+      return $timeout(function() {
+        return $http.get('./app/data/data.json').then(function(response) {
+          return parseJson(response.data);
+        });
+      }, 30);
+    }
+  };
+  return promise;
+
+  // parse helper
+  function parseJson(data) {
+    angular.forEach(data, function(row) { // we parse our dates & floats
+      if (!row.city.charAt(0).match(/\w/)) {
+        var splitString = row.city.match(/(.)(.+)/);
+        row.city = removeDiacritics.replace(splitString[1]) + splitString[2]; // only remove the diacritic from the leading char
+      }
+      row.price = parseFloat(row.price).toFixed(2);
+      row.start_date = Date.parse(row.start_date);
+      row.end_date = Date.parse(row.end_date);
+    });
+    return data;
+  }
 });
 
-evtApp.factory('localdata', function($timeout, $http) {
-    var request = {
-        fetch: function() {
-            return $timeout(function() {
-                return $http.get('./app/data/data.json').then(function(response) {
-                    return response.data;
-                });
-            }, 30);
-        }
-    };
-    return request;
+
+// FILTERS
+evtApp.filter('sanitizeTitle', function() {
+  return function(input) {
+    var letter = input.charAt(0).toUpperCase();
+    var out = [];
+
+    for (var i = 0; i < input.length; i++) {
+
+      if (i === 0) {
+        out.push(letter);
+      } else {
+        out.push(input[i]);
+      }
+
+    }
+    return out.join('').replace('_', ' ');
+  };
 });
 
-evtApp.controller('chartController', function(){
+evtApp.controller('chartController', function($scope) {
+  $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
+  $scope.series = ['Series A', 'Series B'];
+  $scope.data = [
+    [65, 59, 80, 81, 56, 55, 40],
+    [28, 48, 40, 19, 86, 27, 90]
+  ];
+  $scope.onClick = onClick;
+
+  function onClick(points, evt) {
+    console.log(points, evt);
+  }
 });
 
-evtApp.directive('chart', function() {
+evtApp.directive('evtChart', function() {
   return {
         restrict: 'E',
-        template: '<p>chart!</p>',
-        scope: {},
-        controller: function() {
-          console.log("chart-booma!");
-        }
+        templateUrl: './app/components/chart/chartView.html',
+        controller: 'chartController'
     };
 });
 
-evtApp.directive('datepicker', function() {
-  return {
-        restrict: 'E',
-        templateUrl: './app/shared/datepicker/datepickerView.html',
-        scope: {},
-        controller: function() {
-          console.log("picker-booma!");
-        }
-    };
-});
-
-evtApp.controller('tableController', function($scope, myCache, localdata, removeDiacritics){
+evtApp.controller('tableController', function($scope) {
   $scope.rowLimit = 10;
   $scope.orderKey = 'id';
+  $scope.date = {
+    start: Date.parse("4/13/2013"),
+    end: Date.parse("3/2/2014")
+  };
+  $scope.orderBy = orderBy;
+  $scope.addRows = addRows;
 
-  $scope.orderBy = function(key) {
+  function orderBy(key) {
     if ($scope.orderKey === key) {
-      $scope.orderKey = '-'+key;
+      $scope.orderKey = '-' + key;
     } else {
       $scope.orderKey = key;
     }
-  };
+  }
 
-  $scope.addRows = function(number) {
+  function addRows(number) {
     if (!number) {
       $scope.rowLimit = 10;
+      $scope.orderKey = 'id';
     } else {
       $scope.rowLimit += number;
     }
-  };
-
-
-  var cache = myCache.get('data');
-
-  if (myCache.get('data')) { // If there’s something in the cache, use it!
-    $scope.jsonData = cache;
   }
-  else { // Otherwise, let’s generate a new instance
-    localdata.fetch().then(function(response) {
-      angular.forEach(response, function (row) { // we parse our dates & floats
-        if (!row.city.charAt(0).match(/\w/)) {
-          var splitString = row.city.match(/(.)(.+)/);
-          row.city = removeDiacritics.replace(splitString[1]) + splitString[2]; // only remove the diacritic from the leading char
-        }
-        row.price = parseFloat(row.price).toFixed(2);
-        row.start_date = Date.parse(row.start_date);
-        row.end_date = Date.parse(row.end_date);
-      });
-      myCache.put('data', response);
-      $scope.jsonData = myCache.get('data');
-    });
-  }
+  
 });
 
-// // Displays data on page
-// myApp.controller('myController', ['$scope', 'myCache',
-//
-// function ($scope, myCache) {
-//   var cache = myCache.get('myData');
-//
-//   if (cache) { // If there’s something in the cache, use it!
-//     $scope.variable = cache;
-//   }
-//   else { // Otherwise, let’s generate a new instance
-//     myCache.put(‘myData’, 'This is cached data!');
-//     $scope.variable = myCache.get('myData');
-//   }
-// }
-//
-// ]);
-
-evtApp.directive('datatable', function() {
+evtApp.directive('evtDatatable', function() {
   return {
-        restrict: 'E',
-        templateUrl: './app/components/datatable/datatableView.html',
-        controller: 'tableController'
-    };
+    restrict: 'E',
+    templateUrl: './app/components/datatable/datatableView.html',
+    controller: 'tableController'
+  };
+});
+
+evtApp.directive('evtDatepicker', function() {
+  return {
+    restrict: 'E',
+    templateUrl: './app/shared/datepicker/datepickerView.html',
+    scope: {},
+    controller: function() {
+      console.log("picker-booma!");
+    }
+  };
 });

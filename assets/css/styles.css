@@ -1,3 +1,7 @@
-body {
-  background-color: salmon;
+a[ng-click]{
+    cursor: pointer;
+}
+
+.jumbotron {
+  background-color: white;
 }

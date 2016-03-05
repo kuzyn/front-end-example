@@ -1,59 +1,28 @@
-evtApp.controller('tableController', function($scope, myCache, localdata, removeDiacritics){
+evtApp.controller('tableController', function($scope) {
   $scope.rowLimit = 10;
   $scope.orderKey = 'id';
+  $scope.date = {
+    start: Date.parse("4/13/2013"),
+    end: Date.parse("3/2/2014")
+  };
+  $scope.orderBy = orderBy;
+  $scope.addRows = addRows;
 
-  $scope.orderBy = function(key) {
+  function orderBy(key) {
     if ($scope.orderKey === key) {
-      $scope.orderKey = '-'+key;
+      $scope.orderKey = '-' + key;
     } else {
       $scope.orderKey = key;
     }
-  };
+  }
 
-  $scope.addRows = function(number) {
+  function addRows(number) {
     if (!number) {
       $scope.rowLimit = 10;
+      $scope.orderKey = 'id';
     } else {
       $scope.rowLimit += number;
     }
-  };
-
-
-  var cache = myCache.get('data');
-
-  if (myCache.get('data')) { // If there’s something in the cache, use it!
-    $scope.jsonData = cache;
   }
-  else { // Otherwise, let’s generate a new instance
-    localdata.fetch().then(function(response) {
-      angular.forEach(response, function (row) { // we parse our dates & floats
-        if (!row.city.charAt(0).match(/\w/)) {
-          var splitString = row.city.match(/(.)(.+)/);
-          row.city = removeDiacritics.replace(splitString[1]) + splitString[2]; // only remove the diacritic from the leading char
-        }
-        row.price = parseFloat(row.price).toFixed(2);
-        row.start_date = Date.parse(row.start_date);
-        row.end_date = Date.parse(row.end_date);
-      });
-      myCache.put('data', response);
-      $scope.jsonData = myCache.get('data');
-    });
-  }
+  
 });
-
-// // Displays data on page
-// myApp.controller('myController', ['$scope', 'myCache',
-//
-// function ($scope, myCache) {
-//   var cache = myCache.get('myData');
-//
-//   if (cache) { // If there’s something in the cache, use it!
-//     $scope.variable = cache;
-//   }
-//   else { // Otherwise, let’s generate a new instance
-//     myCache.put(‘myData’, 'This is cached data!');
-//     $scope.variable = myCache.get('myData');
-//   }
-// }
-//
-// ]);

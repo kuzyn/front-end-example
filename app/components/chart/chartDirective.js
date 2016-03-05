@@ -1,10 +1,7 @@
-evtApp.directive('chart', function() {
+evtApp.directive('evtChart', function() {
   return {
         restrict: 'E',
-        template: '<p>chart!</p>',
-        scope: {},
-        controller: function() {
-          console.log("chart-booma!");
-        }
+        templateUrl: './app/components/chart/chartView.html',
+        controller: 'chartController'
     };
 });

@@ -1,26 +1,25 @@
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th><a id="table-id-order" href="#" ng-click="orderBy('id')">#</a></th>
-      <th><a id="table-city-order" href="#" ng-click="orderBy('city')">City</a></th>
-      <th><a id="table-start_date-order" href="#" ng-click="orderBy('start_date')">Start Date</a></th>
-      <th><a id="table-end_date-order" href="#" ng-click="orderBy('end_date')">End Date</a></th>
-      <th><a id="table-price-order" href="#" ng-click="orderBy('price')">Price</a></th>
-      <th><a id="table-status-order" href="#" ng-click="orderBy('status')">Status</a></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="row in jsonData | orderBy:orderKey | limitTo:rowLimit">
-      <th scope="row">{{row.id}}</th>
-      <td>{{row.city}}</td>
-      <td>{{row.start_date | date: 'shortDate' }}</td>
-      <td>{{row.end_date | date: 'shortDate' }}</td>
-      <td>{{row.price}}</td>
-      <td>{{row.status}}</td>
-    </tr>
-  </tbody>
-</table>
-<a class="btn btn-default" ng-click="addRows(10)">load more</a>
-<a class="btn btn-default" ng-click="addRows(0)">reset</a>
-
-<!-- {"id":1,"city":"Neftegorsk","start_date":"4/13/2013","end_date":"5/18/2013","price":"55.82","status":"Seldom","color":"#fd4e19"} -->
+<h3>Datatable</h3>
+<div class="col-xs-12">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th ng-repeat="(key, value) in jsonData[0]"><a id="table-{{key}}-order" ng-click="orderBy(key)">{{key | sanitizeTitle}}</a></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="row in jsonData | orderBy:orderKey | limitTo:rowLimit">
+        <th class="col-xs-1" scope="row">{{row.id}}</th>
+        <td class="col-xs-2">{{row.city}}</td>
+        <td class="col-xs-3">{{row.start_date | date: 'shortDate' }}</td>
+        <td class="col-xs-3">{{row.end_date | date: 'shortDate' }}</td>
+        <td class="col-xs-1">{{row.price}}</td>
+        <td class="col-xs-1">{{row.status}}</td>
+        <td class="col-xs-1" ng-style='{"background-color":row.color}'>{{row.color}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="form-group">
+    <a class="btn btn-default" ng-click="addRows(10)">load more</a>
+    <a class="btn btn-default" ng-click="addRows(0)">reset</a>
+  </div>
+</div>
