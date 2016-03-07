@@ -1,6 +1,10 @@
-<h3>Datatable {{filteredData.length}}</h3>
+<h3>Datatable <span ng-show="filteredData.length > 0">({{rowLimit}} of {{filteredData.length}})</span></h3>
 <div class="col-xs-12 table-responsive">
-  <table class="table table-bordered">
+  <div class="bs-callout bs-callout-danger" ng-show="filteredData.length === 0">
+    <h4>No results :(</h4>
+    <p>Change the date range?</p>
+  </div>
+  <table class="table table-bordered" ng-show="filteredData.length > 0">
     <thead>
       <tr>
         <th ng-repeat="(key, value) in jsonData[0]"><a id="table-{{key}}-order" ng-click="orderBy(key)">{{key | sanitizeTitle}}</a></th>

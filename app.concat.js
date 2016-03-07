@@ -56,6 +56,14 @@ evtApp.factory('selectedDate', function () {
     return data;
 });
 
+evtApp.factory('selectedDate', function () {
+    var data = {
+      start: undefined,
+      end: undefined
+    };
+    return data;
+});
+
 
 // FILTERS
 evtApp.filter('sanitizeTitle', function() {
@@ -118,6 +126,13 @@ evtApp.directive('chartDir', function() {
     };
 });
 
+evtApp.directive('datepickerDir', function() {
+  return {
+    restrict: 'E',
+    templateUrl: './app/shared/datepicker/datepickerView.html'
+  };
+});
+
 evtApp.controller('datatableCtrl', function($scope, selectedDate) {
   $scope.rowLimit = 10;
   $scope.orderKey = 'id';
@@ -154,12 +169,5 @@ evtApp.directive('datatableDir', function() {
     restrict: 'E',
     templateUrl: './app/components/datatable/datatableView.html',
     controller: 'datatableCtrl'
-  };
-});
-
-evtApp.directive('datepickerDir', function() {
-  return {
-    restrict: 'E',
-    templateUrl: './app/shared/datepicker/datepickerView.html'
   };
 });

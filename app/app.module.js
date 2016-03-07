@@ -56,6 +56,14 @@ evtApp.factory('selectedDate', function () {
     return data;
 });
 
+evtApp.factory('selectedDate', function () {
+    var data = {
+      start: undefined,
+      end: undefined
+    };
+    return data;
+});
+
 
 // FILTERS
 evtApp.filter('sanitizeTitle', function() {
