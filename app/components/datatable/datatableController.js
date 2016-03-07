@@ -1,12 +1,8 @@
-evtApp.controller('datatableCtrl', function($scope) {
+evtApp.controller('datatableCtrl', function($scope, selectedDate) {
   $scope.rowLimit = 10;
   $scope.orderKey = 'id';
-  $scope.date = {
-    start: Date.parse("4/13/2013"),
-    end: Date.parse("3/2/2014")
-  };
-  $scope.fromDate;
-  $scope.toDate;
+  $scope.date = selectedDate;
+
   $scope.orderBy = orderBy;
   $scope.addRows = addRows;
 
@@ -22,6 +18,10 @@ evtApp.controller('datatableCtrl', function($scope) {
     if (!number) {
       $scope.rowLimit = 10;
       $scope.orderKey = 'id';
+      $scope.date = {
+        start: undefined,
+        end: undefined
+      };
     } else {
       $scope.rowLimit += number;
     }

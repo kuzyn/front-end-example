@@ -38,6 +38,14 @@ evtApp.factory('localdata', function($timeout, $http, removeDiacritics) {
   }
 });
 
+evtApp.factory('selectedDate', function () {
+    var data = {
+      start: undefined,
+      end: undefined
+    };
+    return data;
+});
+
 
 // FILTERS
 evtApp.filter('sanitizeTitle', function() {
@@ -55,5 +63,25 @@ evtApp.filter('sanitizeTitle', function() {
 
     }
     return out.join('').replace('_', ' ');
+  };
+});
+
+evtApp.filter('filterDateRange', function() {
+  return function(input, start, end) {
+    var out = [];
+    var pickerStart = Date.parse(start);
+    var pickerEnd = Date.parse(end);
+
+    if (angular.isUndefined(start) || angular.isUndefined(end)) {
+      return input;
+    }
+
+    angular.forEach(input, function(row) {
+      if (row.start_date >= pickerStart && row.end_date <= pickerEnd) {
+        out.push(row)
+      }
+    });
+    return out
+
   };
 });

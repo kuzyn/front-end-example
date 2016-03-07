@@ -1,4 +1,4 @@
-<h3>Datatable</h3>
+<h3>Datatable {{filteredData.length}}</h3>
 <div class="col-xs-12 table-responsive">
   <table class="table table-bordered">
     <thead>
@@ -7,11 +7,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="row in jsonData | orderBy:orderKey | limitTo:rowLimit">
+      <tr ng-repeat="row in filteredData = (jsonData | orderBy:orderKey | filterDateRange:date.start:date.end) | limitTo:rowLimit">
         <th class="col-xs-1" scope="row">{{row.id}}</th>
         <td class="col-xs-2">{{row.city}}</td>
-        <td class="col-xs-3">{{row.start_date | date: 'shortDate' }}</td>
-        <td class="col-xs-3">{{row.end_date | date: 'shortDate' }}</td>
+        <td class="col-xs-3">{{row.start_date | date: 'MM/dd/yyyy' }}</td>
+        <td class="col-xs-3">{{row.end_date | date: 'MM/dd/yyyy' }}</td>
         <td class="col-xs-1">{{row.price}}</td>
         <td class="col-xs-1">{{row.status}}</td>
         <td class="col-xs-1" ng-style='{"background-color":row.color}'>{{row.color}}</td>
@@ -19,7 +19,7 @@
     </tbody>
   </table>
 </div>
-<div class="form-group">
-  <a class="btn btn-default" ng-click="addRows(10)">load more</a>
+<div class="form-group col-xs-12">
+  <a class="btn btn-default" ng-click="addRows(10)" ng-show="filteredData.length > 10">load more</a>
   <a class="btn btn-default" ng-click="addRows(0)">reset</a>
 </div>

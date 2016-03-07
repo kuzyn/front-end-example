@@ -38,6 +38,14 @@ evtApp.factory('localdata', function($timeout, $http, removeDiacritics) {
   }
 });
 
+evtApp.factory('selectedDate', function () {
+    var data = {
+      start: undefined,
+      end: undefined
+    };
+    return data;
+});
+
 
 // FILTERS
 evtApp.filter('sanitizeTitle', function() {
@@ -55,6 +63,26 @@ evtApp.filter('sanitizeTitle', function() {
 
     }
     return out.join('').replace('_', ' ');
+  };
+});
+
+evtApp.filter('filterDateRange', function() {
+  return function(input, start, end) {
+    var out = [];
+    var pickerStart = Date.parse(start);
+    var pickerEnd = Date.parse(end);
+
+    if (angular.isUndefined(start) || angular.isUndefined(end)) {
+      return input;
+    }
+
+    angular.forEach(input, function(row) {
+      if (row.start_date >= pickerStart && row.end_date <= pickerEnd) {
+        out.push(row)
+      }
+    });
+    return out
+
   };
 });
 
@@ -80,15 +108,11 @@ evtApp.directive('chartDir', function() {
     };
 });
 
-evtApp.controller('datatableCtrl', function($scope) {
+evtApp.controller('datatableCtrl', function($scope, selectedDate) {
   $scope.rowLimit = 10;
   $scope.orderKey = 'id';
-  $scope.date = {
-    start: Date.parse("4/13/2013"),
-    end: Date.parse("3/2/2014")
-  };
-  $scope.fromDate;
-  $scope.toDate;
+  $scope.date = selectedDate;
+
   $scope.orderBy = orderBy;
   $scope.addRows = addRows;
 
@@ -104,6 +128,10 @@ evtApp.controller('datatableCtrl', function($scope) {
     if (!number) {
       $scope.rowLimit = 10;
       $scope.orderKey = 'id';
+      $scope.date = {
+        start: undefined,
+        end: undefined
+      };
     } else {
       $scope.rowLimit += number;
     }
