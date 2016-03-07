@@ -26,13 +26,23 @@ evtApp.factory('localdata', function($timeout, $http, removeDiacritics) {
   // parse helper
   function parseJson(data) {
     angular.forEach(data, function(row) { // we parse our dates & floats
+      var start_date = Date.parse(row.start_date);
+      var end_date = Date.parse(row.end_date);
+
       if (!row.city.charAt(0).match(/\w/)) {
         var splitString = row.city.match(/(.)(.+)/);
         row.city = removeDiacritics.replace(splitString[1]) + splitString[2]; // only remove the diacritic from the leading char
       }
+
+      if (start_date > end_date) {
+        row.start_date = end_date;
+        row.end_date = start_date;
+      } else {
+        row.start_date = start_date;
+        row.end_date = end_date;
+      }
+
       row.price = parseFloat(row.price).toFixed(2);
-      row.start_date = Date.parse(row.start_date);
-      row.end_date = Date.parse(row.end_date);
     });
     return data;
   }
