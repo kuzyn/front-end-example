@@ -1,10 +1,6 @@
-evtApp.directive('evtDatepicker', function() {
+evtApp.directive('datepickerDir', function() {
   return {
     restrict: 'E',
-    templateUrl: './app/shared/datepicker/datepickerView.html',
-    scope: {},
-    controller: function() {
-      console.log("picker-booma!");
-    }
+    templateUrl: './app/shared/datepicker/datepickerView.html'
   };
 });

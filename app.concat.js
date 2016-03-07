@@ -58,7 +58,7 @@ evtApp.filter('sanitizeTitle', function() {
   };
 });
 
-evtApp.controller('chartController', function($scope) {
+evtApp.controller('chartCtrl', function($scope) {
   $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
   $scope.series = ['Series A', 'Series B'];
   $scope.data = [
@@ -72,21 +72,23 @@ evtApp.controller('chartController', function($scope) {
   }
 });
 
-evtApp.directive('evtChart', function() {
+evtApp.directive('chartDir', function() {
   return {
         restrict: 'E',
         templateUrl: './app/components/chart/chartView.html',
-        controller: 'chartController'
+        controller: 'chartCtrl'
     };
 });
 
-evtApp.controller('tableController', function($scope) {
+evtApp.controller('datatableCtrl', function($scope) {
   $scope.rowLimit = 10;
   $scope.orderKey = 'id';
   $scope.date = {
     start: Date.parse("4/13/2013"),
     end: Date.parse("3/2/2014")
   };
+  $scope.fromDate;
+  $scope.toDate;
   $scope.orderBy = orderBy;
   $scope.addRows = addRows;
 
@@ -106,24 +108,20 @@ evtApp.controller('tableController', function($scope) {
       $scope.rowLimit += number;
     }
   }
-  
+
 });
 
-evtApp.directive('evtDatatable', function() {
+evtApp.directive('datatableDir', function() {
   return {
     restrict: 'E',
     templateUrl: './app/components/datatable/datatableView.html',
-    controller: 'tableController'
+    controller: 'datatableCtrl'
   };
 });
 
-evtApp.directive('evtDatepicker', function() {
+evtApp.directive('datepickerDir', function() {
   return {
     restrict: 'E',
-    templateUrl: './app/shared/datepicker/datepickerView.html',
-    scope: {},
-    controller: function() {
-      console.log("picker-booma!");
-    }
+    templateUrl: './app/shared/datepicker/datepickerView.html'
   };
 });
