@@ -95,20 +95,25 @@ evtApp.filter('filterDateRange', function() {
 evtApp.controller('datatableCtrl', function($scope, selectedDate, localdata) {
   $scope.jsonData = {};
   $scope.filteredData = {};
+
   $scope.filter = {
     rowStart: 0,
     rowStop: 10,
     orderKey: 'id'
   };
 
-  $scope.chartData = {
-    dataPoints: 0,
-    sampleSize: 0,
-    labels: [],
-    series: [],
-    prices: [],
-    pricesAvg: []
-  };
+  //TEMP
+  // $scope.dataChart = {
+  //   dataPoints: 0,
+  //   sampleSize: 0,
+  //   labels: ["January", "February", "March", "April", "May", "June", "July"],
+  //   series: ['Series A', 'Series B'],
+  //   data: [
+  //     [65, 59, 80, 81, 56, 55, 40],
+  //     [28, 48, 40, 19, 86, 27, 90]
+  //   ]
+  // };
+  //TEMP
 
   localdata.fetch().then(function(response) {
     $scope.jsonData = response;
@@ -120,23 +125,10 @@ evtApp.controller('datatableCtrl', function($scope, selectedDate, localdata) {
   $scope.addRows = addRows;
   $scope.resetFilters = resetFilters;
 
-  $scope.$watch(function () {
-    $scope.filteredData = $scope.$eval("jsonData | orderBy:filter.orderKey | filterDateRange:selectedDate.start:selectedDate.end");
-  });
+  // $scope.$watch(function () {
+  //   $scope.filteredData = $scope.$eval("jsonData | orderBy:filter.orderKey | filterDateRange:selectedDate.start:selectedDate.end");
+  // });
 
-  //TEMP
-  $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
-  $scope.series = ['Series A', 'Series B'];
-  $scope.data = [
-    [65, 59, 80, 81, 56, 55, 40],
-    [28, 48, 40, 19, 86, 27, 90]
-  ];
-  $scope.onClick = onClick;
-
-  function onClick() {
-    console.log($scope.filteredData);
-  }
-  //TEMP
 
   function orderBy(key) {
     if ($scope.filter.orderKey === key) {
@@ -147,20 +139,54 @@ evtApp.controller('datatableCtrl', function($scope, selectedDate, localdata) {
   }
 
   function resetFilters() {
-    $scope.filter.rowStart = 0;
-    $scope.filter.rowStop = 10;
-    $scope.filter.orderKey = 'id';
+    $scope.filter = {
+      rowStart: 0,
+      rowStop: 10,
+      orderKey: 'id'
+    };
     $scope.selectedDate = {
       start: undefined,
       end: undefined
     };
+    updateDataChart();
   }
+
+  function resetDataChart() {
+    console.log("reset");
+    $scope.dataChart = {
+      dataPoints: 0,
+      sampleSize: 0,
+      labels: [],
+      series: ['Average Price', 'Median Price'],
+      data: [
+        [],
+        []
+      ]
+    };
+  }
+
+  function updateDataChart() {
+    var dataObj = $scope.dataChart;
+    resetDataChart();
+
+    angular.forEach($scope.jsonData, function(row) {
+      if (dataObj.labels.indexOf(row.status) === -1) {
+        dataObj.labels.push(row.status);
+      } else {
+
+      }
+    });
+
+  }
+
+// {"id":1,"city":"Neftegorsk","start_date":"4/13/2013","end_date":"5/18/2013","price":"55.82","status":"Seldom","color":"#fd4e19"}
 
   function addRows(number) {
     if (!number) {
     } else {
       $scope.filter.rowStop += number;
     }
+    updateDataChart();
   }
 
 });
@@ -174,15 +200,35 @@ evtApp.directive('datatableDir', function() {
 });
 
 evtApp.directive('chartDir', function() {
+
+  function link(scope, element, attrs) {
+    scope.onClick = onClick;
+    function onClick() {
+      console.log(scope.dataChart);
+    }
+  }
+
   return {
     restrict: 'E',
-    templateUrl: './app/shared/chart/chartView.html'
+    templateUrl: './app/shared/chart/chartView.html',
+    link: link
   };
 });
 
-evtApp.directive('datepickerDir', function() {
+evtApp.directive('datepickerDir', function($timeout) {
+
+  function link(scope, element, attrs) {
+    scope.resetDate = resetDate;
+    function resetDate() {
+      $timeout(function() {
+        scope.resetFilters();
+      });
+    }
+  }
+
   return {
     restrict: 'E',
-    templateUrl: './app/shared/datepicker/datepickerView.html'
+    templateUrl: './app/shared/datepicker/datepickerView.html',
+    link: link
   };
 });
