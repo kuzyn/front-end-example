@@ -1,4 +1,5 @@
-<h3>Datatable <span ng-show="filteredData.length > 0">({{rowLimit}} of {{filteredData.length}})</span></h3>
+<h3>Datatable <span ng-show="filteredData.length > 0">({{filter.rowStop-filter.rowStart}} of {{filteredData.length}}) <a class="small" ng-click="addRows(10)" ng-show="filteredData.length > 10">more results</a></span></h3>
+
 <div class="col-xs-12 table-responsive">
   <div class="bs-callout bs-callout-danger" ng-show="filteredData.length === 0">
     <h4>No results :(</h4>
@@ -11,7 +12,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="row in filteredData = (jsonData | orderBy:orderKey | filterDateRange:date.start:date.end) | limitTo:rowLimit">
+      <tr ng-repeat="row in filteredData | limitTo:filter.rowStop:filter.rowStart">
         <th class="col-xs-1" scope="row">{{row.id}}</th>
         <td class="col-xs-2">{{row.city}}</td>
         <td class="col-xs-3">{{row.start_date | date: 'MM/dd/yyyy' }}</td>
@@ -24,6 +25,5 @@
   </table>
 </div>
 <div class="form-group col-xs-12">
-  <a class="btn btn-default" ng-click="addRows(10)" ng-show="filteredData.length > 10">load more</a>
-  <a class="btn btn-default" ng-click="addRows(0)">reset</a>
+  <a class="btn btn-default" ng-click="resetFilters()">reset</a>
 </div>

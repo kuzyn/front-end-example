@@ -2,11 +2,8 @@
 var evtApp = angular.module('evtApp', ['txx.diacritics', 'chart.js']);
 
 // INIT
-evtApp.run(function($rootScope, $rootElement, localdata) {
+evtApp.run(function($rootScope, $rootElement) {
   $rootScope.appName = $rootElement.attr('ng-app');
-  localdata.fetch().then(function(response) {
-    $rootScope.jsonData = response;
-  });
 });
 
 
@@ -56,15 +53,6 @@ evtApp.factory('selectedDate', function () {
     return data;
 });
 
-evtApp.factory('selectedDate', function () {
-    var data = {
-      start: undefined,
-      end: undefined
-    };
-    return data;
-});
-
-
 // FILTERS
 evtApp.filter('sanitizeTitle', function() {
   return function(input) {
@@ -96,10 +84,10 @@ evtApp.filter('filterDateRange', function() {
 
     angular.forEach(input, function(row) {
       if (row.start_date >= pickerStart && row.end_date <= pickerEnd) {
-        out.push(row)
+        out.push(row);
       }
     });
-    return out
+    return out;
 
   };
 });

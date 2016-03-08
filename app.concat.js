@@ -2,11 +2,8 @@
 var evtApp = angular.module('evtApp', ['txx.diacritics', 'chart.js']);
 
 // INIT
-evtApp.run(function($rootScope, $rootElement, localdata) {
+evtApp.run(function($rootScope, $rootElement) {
   $rootScope.appName = $rootElement.attr('ng-app');
-  localdata.fetch().then(function(response) {
-    $rootScope.jsonData = response;
-  });
 });
 
 
@@ -56,15 +53,6 @@ evtApp.factory('selectedDate', function () {
     return data;
 });
 
-evtApp.factory('selectedDate', function () {
-    var data = {
-      start: undefined,
-      end: undefined
-    };
-    return data;
-});
-
-
 // FILTERS
 evtApp.filter('sanitizeTitle', function() {
   return function(input) {
@@ -96,15 +84,47 @@ evtApp.filter('filterDateRange', function() {
 
     angular.forEach(input, function(row) {
       if (row.start_date >= pickerStart && row.end_date <= pickerEnd) {
-        out.push(row)
+        out.push(row);
       }
     });
-    return out
+    return out;
 
   };
 });
 
-evtApp.controller('chartCtrl', function($scope) {
+evtApp.controller('datatableCtrl', function($scope, selectedDate, localdata) {
+  $scope.jsonData = {};
+  $scope.filteredData = {};
+  $scope.filter = {
+    rowStart: 0,
+    rowStop: 10,
+    orderKey: 'id'
+  };
+
+  $scope.chartData = {
+    dataPoints: 0,
+    sampleSize: 0,
+    labels: [],
+    series: [],
+    prices: [],
+    pricesAvg: []
+  };
+
+  localdata.fetch().then(function(response) {
+    $scope.jsonData = response;
+  });
+
+  $scope.selectedDate = selectedDate;
+
+  $scope.orderBy = orderBy;
+  $scope.addRows = addRows;
+  $scope.resetFilters = resetFilters;
+
+  $scope.$watch(function () {
+    $scope.filteredData = $scope.$eval("jsonData | orderBy:filter.orderKey | filterDateRange:selectedDate.start:selectedDate.end");
+  });
+
+  //TEMP
   $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
   $scope.series = ['Series A', 'Series B'];
   $scope.data = [
@@ -113,52 +133,33 @@ evtApp.controller('chartCtrl', function($scope) {
   ];
   $scope.onClick = onClick;
 
-  function onClick(points, evt) {
-    console.log(points, evt);
+  function onClick() {
+    console.log($scope.filteredData);
   }
-});
-
-evtApp.directive('chartDir', function() {
-  return {
-        restrict: 'E',
-        templateUrl: './app/components/chart/chartView.html',
-        controller: 'chartCtrl'
-    };
-});
-
-evtApp.directive('datepickerDir', function() {
-  return {
-    restrict: 'E',
-    templateUrl: './app/shared/datepicker/datepickerView.html'
-  };
-});
-
-evtApp.controller('datatableCtrl', function($scope, selectedDate) {
-  $scope.rowLimit = 10;
-  $scope.orderKey = 'id';
-  $scope.date = selectedDate;
-
-  $scope.orderBy = orderBy;
-  $scope.addRows = addRows;
+  //TEMP
 
   function orderBy(key) {
-    if ($scope.orderKey === key) {
-      $scope.orderKey = '-' + key;
+    if ($scope.filter.orderKey === key) {
+      $scope.filter.orderKey = '-' + key;
     } else {
-      $scope.orderKey = key;
+      $scope.filter.orderKey = key;
     }
+  }
+
+  function resetFilters() {
+    $scope.filter.rowStart = 0;
+    $scope.filter.rowStop = 10;
+    $scope.filter.orderKey = 'id';
+    $scope.selectedDate = {
+      start: undefined,
+      end: undefined
+    };
   }
 
   function addRows(number) {
     if (!number) {
-      $scope.rowLimit = 10;
-      $scope.orderKey = 'id';
-      $scope.date = {
-        start: undefined,
-        end: undefined
-      };
     } else {
-      $scope.rowLimit += number;
+      $scope.filter.rowStop += number;
     }
   }
 
@@ -169,5 +170,19 @@ evtApp.directive('datatableDir', function() {
     restrict: 'E',
     templateUrl: './app/components/datatable/datatableView.html',
     controller: 'datatableCtrl'
+  };
+});
+
+evtApp.directive('chartDir', function() {
+  return {
+    restrict: 'E',
+    templateUrl: './app/shared/chart/chartView.html'
+  };
+});
+
+evtApp.directive('datepickerDir', function() {
+  return {
+    restrict: 'E',
+    templateUrl: './app/shared/datepicker/datepickerView.html'
   };
 });
