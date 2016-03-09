@@ -48,9 +48,24 @@ evtApp.factory('localdata', function($timeout, $http, removeDiacritics) {
 evtApp.factory('selectedDate', function () {
     var data = {
       start: undefined,
-      end: undefined
+      stop: undefined
     };
-    return data;
+
+    return {
+      reset: function() {
+        data.start = undefined;
+        data.end = undefined;
+        return data;
+      },
+      set: function(start, end) {
+        data.start = start;
+        data.end = end;
+        return data;
+      },
+      get: function() {
+        return data;
+      }
+    };
 });
 
 // FILTERS

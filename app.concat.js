@@ -48,9 +48,24 @@ evtApp.factory('localdata', function($timeout, $http, removeDiacritics) {
 evtApp.factory('selectedDate', function () {
     var data = {
       start: undefined,
-      end: undefined
+      stop: undefined
     };
-    return data;
+
+    return {
+      reset: function() {
+        data.start = undefined;
+        data.end = undefined;
+        return data;
+      },
+      set: function(start, end) {
+        data.start = start;
+        data.end = end;
+        return data;
+      },
+      get: function() {
+        return data;
+      }
+    };
 });
 
 // FILTERS
@@ -102,24 +117,31 @@ evtApp.controller('datatableCtrl', function($scope, selectedDate, localdata) {
     orderKey: 'id'
   };
 
+  $scope.chartData = {
+    dataPoints: 0,
+    sampleSize: 0,
+    labels: [],
+    series: [],
+    prices: [],
+    pricesAvg: []
+  };
+
   //TEMP
-  // $scope.dataChart = {
-  //   dataPoints: 0,
-  //   sampleSize: 0,
-  //   labels: ["January", "February", "March", "April", "May", "June", "July"],
-  //   series: ['Series A', 'Series B'],
-  //   data: [
-  //     [65, 59, 80, 81, 56, 55, 40],
-  //     [28, 48, 40, 19, 86, 27, 90]
-  //   ]
-  // };
+  $scope.dataChart = {
+    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    series: ['Series A', 'Series B'],
+    data: [
+      [65, 59, 80, 81, 56, 55, 40],
+      [28, 48, 40, 19, 86, 27, 90]
+    ]
+  };
   //TEMP
 
   localdata.fetch().then(function(response) {
     $scope.jsonData = response;
   });
 
-  $scope.selectedDate = selectedDate;
+  $scope.selectedDate = selectedDate.get();
 
   $scope.orderBy = orderBy;
   $scope.addRows = addRows;
@@ -144,49 +166,14 @@ evtApp.controller('datatableCtrl', function($scope, selectedDate, localdata) {
       rowStop: 10,
       orderKey: 'id'
     };
-    $scope.selectedDate = {
-      start: undefined,
-      end: undefined
-    };
-    updateDataChart();
+    $scope.selectedDate = selectedDate.reset();
   }
-
-  function resetDataChart() {
-    console.log("reset");
-    $scope.dataChart = {
-      dataPoints: 0,
-      sampleSize: 0,
-      labels: [],
-      series: ['Average Price', 'Median Price'],
-      data: [
-        [],
-        []
-      ]
-    };
-  }
-
-  function updateDataChart() {
-    var dataObj = $scope.dataChart;
-    resetDataChart();
-
-    angular.forEach($scope.jsonData, function(row) {
-      if (dataObj.labels.indexOf(row.status) === -1) {
-        dataObj.labels.push(row.status);
-      } else {
-
-      }
-    });
-
-  }
-
-// {"id":1,"city":"Neftegorsk","start_date":"4/13/2013","end_date":"5/18/2013","price":"55.82","status":"Seldom","color":"#fd4e19"}
 
   function addRows(number) {
     if (!number) {
     } else {
       $scope.filter.rowStop += number;
     }
-    updateDataChart();
   }
 
 });
