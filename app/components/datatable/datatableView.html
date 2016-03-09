@@ -12,7 +12,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="row in filteredData = (jsonData | orderBy:filter.orderKey | filterDateRange:selectedDate.start:selectedDate.end) | limitTo:filter.rowStop:filter.rowStart">
+      <tr ng-repeat="row in (filteredData = (jsonData | orderBy:filter.orderKey | filterDateRange:selectedDate.start:selectedDate.end)) | limitTo:filter.rowStop:filter.rowStart">
         <th class="col-xs-1" scope="row">{{row.id}}</th>
         <td class="col-xs-2">{{row.city}}</td>
         <td class="col-xs-3">{{row.start_date | date: 'MM/dd/yyyy' }}</td>
@@ -22,6 +22,11 @@
         <td class="col-xs-1" ng-style='{"background-color":row.color}'>{{row.color}}</td>
       </tr>
     </tbody>
+    <thead>
+      <tr>
+        <th ng-repeat="(key, value) in jsonData[0]"><a id="table-{{key}}-order" ng-click="orderBy(key)">{{key | sanitizeTitle}}</a></th>
+      </tr>
+    </thead>
   </table>
 </div>
 <div class="form-group col-xs-12">
