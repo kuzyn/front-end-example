@@ -1,7 +1,14 @@
-#Samuel Cousin / Angular, jQuery, Bootstrap
+#Samuel Cousin / Angular, Bootstrap
 
-1. Use the `data.json` file to create a responsive bootstrap grid with headers **city**, **start date**, **end date**, **price**, **status**, **color**.  All the Columns should be sortable.  
+Simple Angular demo app using [Angular-Chart.js](http://jtblin.github.io/angular-chart.js/) and Bootstrap.  
 
-2. Above the grid, please add two date pickers to filter the object by date range.
+You can try it out at: [http://angular.samuelcousin.com/](http://angular.samuelcousin.com/)  
 
-3. Using [Angular-Chart.js](http://jtblin.github.io/angular-chart.js/), create a chart using some of the properties of the data above. Here you may be as creative as you wish.
+You can clone it locally and test it out. To mess around the code and go wild, just:   
+```npm install```  
+```bower install```  
+```gulp```
+
+It's super simple & looks like:
+
+![screenshot](assets/img/screenshot.png?raw=true "")
