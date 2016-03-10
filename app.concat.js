@@ -213,49 +213,30 @@ evtApp.directive('datatableDir', function() {
 evtApp.directive('chartDir', function($timeout) {
 
   function link(scope, element, attrs) {
-    scope.dataChart = {
-      labels: [],
-      series: ['Price', 'Number of days'],
-      data: [
-        [],
-        [],
-      ]
-    };
+    scope.dataChart = resetChart();
 
-    scope.$watchCollection('filter.rowStop', function(newValue, oldValue) {
-      if (!angular.isUndefined(newValue) && !angular.isUndefined(scope.filteredData) && newValue !== oldValue) {
-        var filteredData = scope.filteredData.slice(scope.filter.rowStart, scope.filter.rowStop);
-        resetChart();
-        $timeout(function() {
-          scope.dataChart = populateChart(filteredData);
-        })
-      }
-    });
+    // reset & redraw our chart
+    function redrawChart(newdata) {
+      $timeout(function() {
+        scope.dataChart = resetChart();
+        scope.dataChart = populateChart(newdata);
+      });
+    }
 
-    scope.$watchCollection('filteredData', function(newValue, oldValue) {
-      var filteredData = [];
-
-      if (!angular.isUndefined(newValue) && angular.isObject(newValue)) {
-        filteredData = scope.filteredData.slice(scope.filter.rowStart, scope.filter.rowStop);
-        resetChart();
-        $timeout(function() {
-          scope.dataChart = populateChart(filteredData);
-        })
-      }
-    });
-
+    // return a populated object with our chart data
     function populateChart(data) {
-      var holder = angular.copy(scope.dataChart)
+      var chartDataObj = angular.copy(scope.dataChart);
       angular.forEach(data, function(item) {
         holder.labels.push(item.city);
         holder.data[0].push(item.price);
         holder.data[1].push(Math.floor((item.end_date - item.start_date) / 86400000));
       });
-      return holder;
+      return chartDataObj;
     }
 
+    // return a resetted chart
     function resetChart() {
-      scope.dataChart = {
+      return {
         labels: [],
         series: ['Price', 'Number of days'],
         data: [
@@ -265,8 +246,27 @@ evtApp.directive('chartDir', function($timeout) {
       };
     }
 
-  }
+    /////////////
+    // WATCHES //
+    /////////////
 
+    // watch our filter values and redraw our graph if it changes
+    scope.$watchCollection('filter', function(newValue, oldValue) {
+      if (!angular.isUndefined(newValue) && !angular.isUndefined(scope.filteredData) && newValue !== oldValue) {
+        var filteredData = scope.filteredData.slice(scope.filter.rowStart, scope.filter.rowStop);
+        redrawChart(filteredData);
+      }
+    });
+
+    // watch our filtered data and redraw if it changes
+    scope.$watchCollection('filteredData', function(newValue, oldValue) {
+      if (!angular.isUndefined(newValue) && angular.isObject(newValue) && newValue !== oldValue) {
+        var filteredData = scope.filteredData.slice(scope.filter.rowStart, scope.filter.rowStop);
+        redrawChart(filteredData);
+      }
+    });
+
+  }
 
   return {
     restrict: 'E',
