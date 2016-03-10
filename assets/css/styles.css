@@ -1,39 +1,32 @@
-a[ng-click]{
-    cursor: pointer;
+a[ng-click] {
+  cursor: pointer;
 }
-
-.jumbotron {
-  background-color: white;
-}
-
-.container-datatable td{
+.container-datatable td {
   font-size: small;
 }
-
 footer {
   height: 50px;
 }
 
 /* Callouts*/
-.bs-callout {
-    padding: 20px;
-    margin: 20px 0;
-    border: 1px solid #eee;
-    border-left-width: 5px;
-    border-radius: 3px;
-}
 
+.bs-callout {
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid #eee;
+  border-left-width: 5px;
+  border-radius: 3px;
+}
 .bs-callout h4 {
-    margin-top: 0;
-    margin-bottom: 5px;
+  margin-top: 0;
+  margin-bottom: 5px;
 }
 .bs-callout p:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
-
 .bs-callout-danger {
-    border-left-color: #d9534f;
+  border-left-color: #d9534f;
 }
 .bs-callout-danger h4 {
-    color: #d9534f;
+  color: #d9534f;
 }
