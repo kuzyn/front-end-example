@@ -1,13 +1,24 @@
-// module
+/////////
+// APP //
+/////////
+
+// create our app module
 var evtApp = angular.module('evtApp', ['txx.diacritics', 'chart.js']);
 
-// INIT
+// init a global parameter
 evtApp.run(function($rootScope, $rootElement) {
   $rootScope.appName = $rootElement.attr('ng-app');
 });
 
 
-// FACTORIES
+///////////////
+// FACTORIES //
+///////////////
+
+/**
+ * $http get our local data file and return a promise
+ * @return {object} data obj with a fetch command (which returns a promise)
+ */
 evtApp.factory('localdata', function($timeout, $http, removeDiacritics) {
   var promise = {
     fetch: function() {
@@ -20,17 +31,19 @@ evtApp.factory('localdata', function($timeout, $http, removeDiacritics) {
   };
   return promise;
 
-  // parse helper
+  // parse helper function
   function parseJson(data) {
     angular.forEach(data, function(row) { // we parse our dates & floats
       var start_date = Date.parse(row.start_date);
       var end_date = Date.parse(row.end_date);
 
       if (!row.city.charAt(0).match(/\w/)) {
+        // only remove the diacritic from the leading char
         var splitString = row.city.match(/(.)(.+)/);
-        row.city = removeDiacritics.replace(splitString[1]) + splitString[2]; // only remove the diacritic from the leading char
+        row.city = removeDiacritics.replace(splitString[1]) + splitString[2];
       }
 
+      // switch the date if end > start to make it more intellegible
       if (start_date > end_date) {
         row.start_date = end_date;
         row.end_date = start_date;
@@ -45,6 +58,10 @@ evtApp.factory('localdata', function($timeout, $http, removeDiacritics) {
   }
 });
 
+/**
+ * Makes our selectedDate available to any ctrl/dir through injection
+ * @return {object} data object with get,set & reset function
+ */
 evtApp.factory('selectedDate', function () {
 
     var data = {
@@ -72,7 +89,15 @@ evtApp.factory('selectedDate', function () {
     };
 });
 
-// FILTERS
+
+/////////////
+// FILTERS //
+/////////////
+
+/**
+ * Filter to remove '_' and capitalize table titles
+ * @return {string} the sanitized title ('start_date' => 'Start date')
+ */
 evtApp.filter('sanitizeTitle', function() {
   return function(input) {
     var letter = input.charAt(0).toUpperCase();
@@ -91,6 +116,10 @@ evtApp.filter('sanitizeTitle', function() {
   };
 });
 
+/**
+ * Return our input if if falls between our date picker range
+ * @return {object} our input that are not filtered out
+ */
 evtApp.filter('filterDateRange', function() {
   return function(input, start, end) {
     var out = [];
