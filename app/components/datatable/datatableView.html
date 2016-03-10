@@ -1,4 +1,4 @@
-<h3>Datatable <span ng-show="filteredData.length > 0">({{filter.rowStop-filter.rowStart}} of {{filteredData.length}}) <a class="small" ng-click="addRows(10)" ng-show="filteredData.length > 10">more results</a></span></h3>
+<h3>Datatable <span ng-show="filteredData.length > 0">({{filter.rowStop-filter.rowStart}} of {{filteredData.length}}) <a class="small" ng-click="addRows(10)" ng-show="filteredData.length > 10">more</a><span class="small"> / </span><a class="small" ng-click="resetFilters()" ng-show="filteredData.length > 10">reset</a></span></h3>
 
 <div class="col-xs-12 table-responsive">
   <div class="bs-callout bs-callout-danger" ng-show="filteredData.length === 0">
@@ -14,21 +14,13 @@
     <tbody>
       <tr ng-repeat="row in (filteredData = (jsonData | orderBy:filter.orderKey | filterDateRange:selectedDate.start:selectedDate.end)) | limitTo:filter.rowStop:filter.rowStart">
         <th class="col-xs-1" scope="row">{{row.id}}</th>
-        <td class="col-xs-2">{{row.city}}</td>
-        <td class="col-xs-3">{{row.start_date | date: 'MM/dd/yyyy' }}</td>
-        <td class="col-xs-3">{{row.end_date | date: 'MM/dd/yyyy' }}</td>
+        <td class="col-xs-4">{{row.city}}</td>
+        <td class="col-xs-2">{{row.start_date | date: 'MM/dd/yyyy' }}</td>
+        <td class="col-xs-2">{{row.end_date | date: 'MM/dd/yyyy' }}</td>
         <td class="col-xs-1">{{row.price}}</td>
         <td class="col-xs-1">{{row.status}}</td>
         <td class="col-xs-1" ng-style='{"background-color":row.color}'>{{row.color}}</td>
       </tr>
     </tbody>
-    <thead>
-      <tr>
-        <th ng-repeat="(key, value) in jsonData[0]"><a id="table-{{key}}-order" ng-click="orderBy(key)">{{key | sanitizeTitle}}</a></th>
-      </tr>
-    </thead>
   </table>
-</div>
-<div class="form-group col-xs-12">
-  <a class="btn btn-default" ng-click="resetFilters()">reset</a>
 </div>

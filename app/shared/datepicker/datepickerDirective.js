@@ -1,8 +1,8 @@
 evtApp.directive('datepickerDir', function($timeout) {
 
   function link(scope, element, attrs) {
-    scope.resetDate = resetDate;
-    function resetDate() {
+    scope.resetState = resetState;
+    function resetState() {
       $timeout(function() {
         scope.resetFilters();
       });

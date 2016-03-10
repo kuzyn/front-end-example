@@ -115,21 +115,27 @@ evtApp.controller('datatableCtrl', function($scope, selectedDate, localdata) {
   // $scope.jsonData = {};
   // $scope.filteredData = {};
 
-  $scope.filter = {
-    rowStart: 0,
-    rowStop: 10,
-    orderKey: 'id'
-  };
+
 
   localdata.fetch().then(function(response) {
     $scope.jsonData = response;
   });
 
-  $scope.selectedDate = selectedDate.get();
 
-  $scope.orderBy = orderBy;
-  $scope.addRows = addRows;
-  $scope.resetFilters = resetFilters;
+  $scope.getSelectedDate = getSelectedDate;
+  $scope.resetSelectedDate = resetSelectedDate;
+
+  function getSelectedDate() {
+    return selectedDate.get();
+  }
+
+  function resetSelectedDate() {
+    return selectedDate.reset();
+  }
+
+  // $scope.orderBy = orderBy;
+  // $scope.addRows = addRows;
+  // $scope.resetFilters = resetFilters;
   // $scope.getFilteredData = getFilteredData;
 
   // $scope.$watch(function () {
@@ -140,41 +146,56 @@ evtApp.controller('datatableCtrl', function($scope, selectedDate, localdata) {
   //     return $scope.filteredData.slice($scope.filter.rowStart, $scope.filter.rowStop);
   // }
 
-  function orderBy(key) {
-    if ($scope.filter.orderKey === key) {
-      $scope.filter.orderKey = '-' + key;
-    } else {
-      $scope.filter.orderKey = key;
-    }
-  }
 
-  function resetFilters() {
-    $scope.filter = {
-      rowStart: 0,
-      rowStop: 10,
-      orderKey: 'id'
-    };
-    $scope.selectedDate = selectedDate.reset();
-  }
-
-  function addRows(number) {
-    if (!number) {
-    } else {
-      $scope.filter.rowStop += number;
-    }
-  }
 
 });
 
 evtApp.directive('datatableDir', function() {
+
+  function link(scope, element, attrs) {
+
+    scope.orderBy = orderBy;
+    scope.resetFilters = resetFilters;
+    scope.addRows = addRows;
+    scope.selectedDate = scope.getSelectedDate();
+
+    scope.filter = {
+      rowStart: 0,
+      rowStop: 10,
+      orderKey: 'id'
+    };
+
+    function orderBy(key) {
+      if (scope.filter.orderKey === key) {
+        scope.filter.orderKey = '-' + key;
+      } else {
+        scope.filter.orderKey = key;
+      }
+    }
+
+    function resetFilters() {
+      scope.filter = {
+        rowStart: 0,
+        rowStop: 10,
+        orderKey: 'id'
+      };
+      scope.selectedDate = scope.resetSelectedDate();
+    }
+
+    function addRows(number) {
+        scope.filter.rowStop += number;
+    }
+  }
+
   return {
     restrict: 'E',
     templateUrl: './app/components/datatable/datatableView.html',
-    controller: 'datatableCtrl'
+    controller: 'datatableCtrl',
+    link: link
   };
 });
 
-evtApp.directive('chartDir', function() {
+evtApp.directive('chartDir', function($timeout) {
 
   function link(scope, element, attrs) {
     scope.dataChart = {
@@ -183,8 +204,7 @@ evtApp.directive('chartDir', function() {
       data: [
         [],
         [],
-      ],
-      colours: []
+      ]
     };
     //TEMP
     // scope.dataChart = {
@@ -197,20 +217,52 @@ evtApp.directive('chartDir', function() {
     // };
     // {"id":1,"city":"Neftegorsk","start_date":"4/13/2013","end_date":"5/18/2013","price":"55.82","status":"Seldom","color":"#fd4e19"}
     //TEMP
-
-    scope.$watchCollection('filteredData', function(newValue, oldValue) {
-      if (angular.isObject(scope.filteredData)) {
-        // console.log(scope.filteredData.slice(scope.filter.rowStart, scope.filter.rowStop));
-        angular.forEach(scope.filteredData.slice(scope.filter.rowStart, scope.filter.rowStop), function(item) {
-          scope.dataChart.labels.push(item.city);
-          scope.dataChart.data[0].push(item.price);
-          scope.dataChart.data[1].push(Math.floor((item.end_date - item.start_date) / 86400000));
-        });
-        console.log(scope.dataChart)
+    //
+    scope.$watchCollection('filter.rowStop', function(newValue, oldValue) {
+      if ( !angular.isUndefined(newValue) && !angular.isUndefined(scope.filteredData) && newValue !== oldValue) {
+      var filteredData = scope.filteredData.slice(scope.filter.rowStart, scope.filter.rowStop);
+      resetChart();
+      $timeout(function(){
+      scope.dataChart = populateChart(filteredData);
+    })
       }
     });
 
+    scope.$watchCollection('filteredData', function(newValue, oldValue) {
+      var filteredData = [];
+
+      if ( !angular.isUndefined(newValue) && angular.isObject(newValue)) {
+        filteredData = scope.filteredData.slice(scope.filter.rowStart, scope.filter.rowStop);
+        resetChart();
+        $timeout(function(){
+          scope.dataChart = populateChart(filteredData);
+        })
+      }
+    });
+
+    function populateChart(data) {
+      var holder = angular.copy(scope.dataChart)
+      angular.forEach(data, function(item) {
+      holder.labels.push(item.city);
+      holder.data[0].push(item.price);
+      holder.data[1].push(Math.floor((item.end_date - item.start_date) / 86400000));
+      });
+      return holder;
+    }
+
+    function resetChart() {
+      scope.dataChart = {
+        labels: [],
+        series: ['Price', 'Number of days'],
+        data: [
+          [],
+          [],
+        ]
+      };
+    }
+
   }
+
 
   return {
     restrict: 'E',
@@ -222,8 +274,8 @@ evtApp.directive('chartDir', function() {
 evtApp.directive('datepickerDir', function($timeout) {
 
   function link(scope, element, attrs) {
-    scope.resetDate = resetDate;
-    function resetDate() {
+    scope.resetState = resetState;
+    function resetState() {
       $timeout(function() {
         scope.resetFilters();
       });

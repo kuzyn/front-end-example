@@ -1,11 +1,16 @@
 <h3>Chart</h3>
-<div class="col-xs-12">
-  <canvas id="graph"
+<div class="bs-callout bs-callout-danger" ng-show="filteredData.length === 0">
+  <h4>No results :(</h4>
+  <p>Change the date range?</p>
+</div>
+<div class="col-md-10 col-md-offset-1" ng-show="filteredData.length > 0">
+  <canvas id="bar-graph"
           class="chart chart-bar"
           chart-data="dataChart.data"
           chart-labels="dataChart.labels"
           chart-legend="true"
           chart-series="dataChart.series"
-          chart-colours="dataChart.colours">
+          resposive="true"
+          height="100">
   </canvas>
 </div>

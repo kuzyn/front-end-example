@@ -27,7 +27,7 @@
 
 <body>
   <div class="container container-title">
-    <div class="jumbotron">
+    <div class="title">
       <h1>Welcome to {{appName}}</h1>
     </div>
   </div>
@@ -37,13 +37,14 @@
     <datepicker-dir ng-controller="datatableCtrl"></datepicker-dir>
   </div>
   <div class="col-md-12 container-datatable">
+    <chart-dir ng-controller="datatableCtrl"></chart-dir>
+  </div>
+  <div class="col-md-12 container-chart">
     <datatable-dir></datatable-dir>
   </div>
 </div>
-  <div class="container container-chart">
-    <chart-dir ng-controller="datatableCtrl"></chart-dir>
-  </div>
 </body>
 
+<footer></footer>
 
 </html>

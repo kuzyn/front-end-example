@@ -6,6 +6,15 @@ a[ng-click]{
   background-color: white;
 }
 
+.container-datatable td{
+  font-size: small;
+}
+
+footer {
+  height: 50px;
+}
+
+/* Callouts*/
 .bs-callout {
     padding: 20px;
     margin: 20px 0;
@@ -14,7 +23,6 @@ a[ng-click]{
     border-radius: 3px;
 }
 
-/* Callouts*/
 .bs-callout h4 {
     margin-top: 0;
     margin-bottom: 5px;
