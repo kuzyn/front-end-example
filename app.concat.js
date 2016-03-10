@@ -62,31 +62,31 @@ evtApp.factory('localdata', function($timeout, $http, removeDiacritics) {
  * Makes our selectedDate available to any ctrl/dir through injection
  * @return {object} data object with get,set & reset function
  */
-evtApp.factory('selectedDate', function () {
+evtApp.factory('selectedDate', function() {
 
-    var data = {
-      start: undefined,
-      stop: undefined
-    };
+  var data = {
+    start: undefined,
+    stop: undefined
+  };
 
-    return {
+  return {
 
-      reset: function() {
-        data.start = undefined;
-        data.end = undefined;
-        return data;
-      },
+    reset: function() {
+      data.start = undefined;
+      data.end = undefined;
+      return data;
+    },
 
-      set: function(start, end) {
-        data.start = start;
-        data.end = end;
-        return data;
-      },
+    set: function(start, end) {
+      data.start = start;
+      data.end = end;
+      return data;
+    },
 
-      get: function() {
-        return data;
-      }
-    };
+    get: function() {
+      return data;
+    }
+  };
 });
 
 
@@ -144,38 +144,23 @@ evtApp.controller('datatableCtrl', function($scope, selectedDate, localdata) {
   // $scope.jsonData = {};
   // $scope.filteredData = {};
 
-
-
+  // fetch our data and expose it
   localdata.fetch().then(function(response) {
     $scope.jsonData = response;
   });
 
-
   $scope.getSelectedDate = getSelectedDate;
   $scope.resetSelectedDate = resetSelectedDate;
 
+  // get our datepicker dates
   function getSelectedDate() {
     return selectedDate.get();
   }
 
+  // reset our datepicker dates
   function resetSelectedDate() {
     return selectedDate.reset();
   }
-
-  // $scope.orderBy = orderBy;
-  // $scope.addRows = addRows;
-  // $scope.resetFilters = resetFilters;
-  // $scope.getFilteredData = getFilteredData;
-
-  // $scope.$watch(function () {
-  //   $scope.filteredData = $scope.$eval('jsonData | orderBy:filter.orderKey | filterDateRange:selectedDate.start:selectedDate.end | limitTo:filter.rowStop:filter.rowStart');
-  // });
-
-  // function getFilteredData() {
-  //     return $scope.filteredData.slice($scope.filter.rowStart, $scope.filter.rowStop);
-  // }
-
-
 
 });
 
@@ -183,16 +168,17 @@ evtApp.directive('datatableDir', function() {
 
   function link(scope, element, attrs) {
 
-    scope.orderBy = orderBy;
-    scope.resetFilters = resetFilters;
-    scope.addRows = addRows;
     scope.selectedDate = scope.getSelectedDate();
-
     scope.filter = {
       rowStart: 0,
       rowStop: 10,
       orderKey: 'id'
     };
+
+    // expose our functions
+    scope.orderBy = orderBy;
+    scope.resetFilters = resetFilters;
+    scope.addRows = addRows;
 
     function orderBy(key) {
       if (scope.filter.orderKey === key) {
@@ -212,7 +198,7 @@ evtApp.directive('datatableDir', function() {
     }
 
     function addRows(number) {
-        scope.filter.rowStop += number;
+      scope.filter.rowStop += number;
     }
   }
 
@@ -235,35 +221,24 @@ evtApp.directive('chartDir', function($timeout) {
         [],
       ]
     };
-    //TEMP
-    // scope.dataChart = {
-    //   labels: ["January", "February", "March", "April", "May", "June", "July"],
-    //   series: ['Series A', 'Series B'],
-    //   data: [
-    //     [65, 59, 80, 81, 56, 55, 40],
-    //     [28, 48, 40, 19, 86, 27, 90]
-    //   ]
-    // };
-    // {"id":1,"city":"Neftegorsk","start_date":"4/13/2013","end_date":"5/18/2013","price":"55.82","status":"Seldom","color":"#fd4e19"}
-    //TEMP
-    //
+
     scope.$watchCollection('filter.rowStop', function(newValue, oldValue) {
-      if ( !angular.isUndefined(newValue) && !angular.isUndefined(scope.filteredData) && newValue !== oldValue) {
-      var filteredData = scope.filteredData.slice(scope.filter.rowStart, scope.filter.rowStop);
-      resetChart();
-      $timeout(function(){
-      scope.dataChart = populateChart(filteredData);
-    })
+      if (!angular.isUndefined(newValue) && !angular.isUndefined(scope.filteredData) && newValue !== oldValue) {
+        var filteredData = scope.filteredData.slice(scope.filter.rowStart, scope.filter.rowStop);
+        resetChart();
+        $timeout(function() {
+          scope.dataChart = populateChart(filteredData);
+        })
       }
     });
 
     scope.$watchCollection('filteredData', function(newValue, oldValue) {
       var filteredData = [];
 
-      if ( !angular.isUndefined(newValue) && angular.isObject(newValue)) {
+      if (!angular.isUndefined(newValue) && angular.isObject(newValue)) {
         filteredData = scope.filteredData.slice(scope.filter.rowStart, scope.filter.rowStop);
         resetChart();
-        $timeout(function(){
+        $timeout(function() {
           scope.dataChart = populateChart(filteredData);
         })
       }
@@ -272,9 +247,9 @@ evtApp.directive('chartDir', function($timeout) {
     function populateChart(data) {
       var holder = angular.copy(scope.dataChart)
       angular.forEach(data, function(item) {
-      holder.labels.push(item.city);
-      holder.data[0].push(item.price);
-      holder.data[1].push(Math.floor((item.end_date - item.start_date) / 86400000));
+        holder.labels.push(item.city);
+        holder.data[0].push(item.price);
+        holder.data[1].push(Math.floor((item.end_date - item.start_date) / 86400000));
       });
       return holder;
     }

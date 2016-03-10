@@ -2,16 +2,17 @@ evtApp.directive('datatableDir', function() {
 
   function link(scope, element, attrs) {
 
-    scope.orderBy = orderBy;
-    scope.resetFilters = resetFilters;
-    scope.addRows = addRows;
     scope.selectedDate = scope.getSelectedDate();
-
     scope.filter = {
       rowStart: 0,
       rowStop: 10,
       orderKey: 'id'
     };
+
+    // expose our functions
+    scope.orderBy = orderBy;
+    scope.resetFilters = resetFilters;
+    scope.addRows = addRows;
 
     function orderBy(key) {
       if (scope.filter.orderKey === key) {
@@ -31,7 +32,7 @@ evtApp.directive('datatableDir', function() {
     }
 
     function addRows(number) {
-        scope.filter.rowStop += number;
+      scope.filter.rowStop += number;
     }
   }
 

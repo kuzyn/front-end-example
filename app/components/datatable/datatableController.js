@@ -2,37 +2,22 @@ evtApp.controller('datatableCtrl', function($scope, selectedDate, localdata) {
   // $scope.jsonData = {};
   // $scope.filteredData = {};
 
-
-
+  // fetch our data and expose it
   localdata.fetch().then(function(response) {
     $scope.jsonData = response;
   });
 
-
   $scope.getSelectedDate = getSelectedDate;
   $scope.resetSelectedDate = resetSelectedDate;
 
+  // get our datepicker dates
   function getSelectedDate() {
     return selectedDate.get();
   }
 
+  // reset our datepicker dates
   function resetSelectedDate() {
     return selectedDate.reset();
   }
-
-  // $scope.orderBy = orderBy;
-  // $scope.addRows = addRows;
-  // $scope.resetFilters = resetFilters;
-  // $scope.getFilteredData = getFilteredData;
-
-  // $scope.$watch(function () {
-  //   $scope.filteredData = $scope.$eval('jsonData | orderBy:filter.orderKey | filterDateRange:selectedDate.start:selectedDate.end | limitTo:filter.rowStop:filter.rowStart');
-  // });
-
-  // function getFilteredData() {
-  //     return $scope.filteredData.slice($scope.filter.rowStart, $scope.filter.rowStop);
-  // }
-
-
 
 });
