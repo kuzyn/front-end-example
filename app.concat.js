@@ -140,76 +140,6 @@ evtApp.filter('filterDateRange', function() {
   };
 });
 
-evtApp.controller('datatableCtrl', function($scope, selectedDate, localdata) {
-  // $scope.jsonData = {};
-  // $scope.filteredData = {};
-
-  // fetch our data and expose it
-  localdata.fetch().then(function(response) {
-    $scope.jsonData = response;
-  });
-
-  $scope.getSelectedDate = getSelectedDate;
-  $scope.resetSelectedDate = resetSelectedDate;
-
-  // get our datepicker dates
-  function getSelectedDate() {
-    return selectedDate.get();
-  }
-
-  // reset our datepicker dates
-  function resetSelectedDate() {
-    return selectedDate.reset();
-  }
-
-});
-
-evtApp.directive('datatableDir', function() {
-
-  function link(scope, element, attrs) {
-
-    scope.selectedDate = scope.getSelectedDate();
-    scope.filter = {
-      rowStart: 0,
-      rowStop: 10,
-      orderKey: 'id'
-    };
-
-    // expose our functions
-    scope.orderBy = orderBy;
-    scope.resetFilters = resetFilters;
-    scope.addRows = addRows;
-
-    function orderBy(key) {
-      if (scope.filter.orderKey === key) {
-        scope.filter.orderKey = '-' + key;
-      } else {
-        scope.filter.orderKey = key;
-      }
-    }
-
-    function resetFilters() {
-      scope.filter = {
-        rowStart: 0,
-        rowStop: 10,
-        orderKey: 'id'
-      };
-      scope.selectedDate = scope.resetSelectedDate();
-    }
-
-    function addRows(number) {
-      scope.filter.rowStop += number;
-    }
-  }
-
-  return {
-    restrict: 'E',
-    templateUrl: './app/components/datatable/datatableView.html',
-    controller: 'datatableCtrl',
-    link: link
-  };
-});
-
 evtApp.directive('chartDir', function($timeout) {
 
   function link(scope, element, attrs) {
@@ -279,6 +209,8 @@ evtApp.directive('datepickerDir', function($timeout) {
 
   function link(scope, element, attrs) {
     scope.resetState = resetState;
+
+    // link our controller 'resetFilters' function
     function resetState() {
       $timeout(function() {
         scope.resetFilters();
@@ -289,6 +221,76 @@ evtApp.directive('datepickerDir', function($timeout) {
   return {
     restrict: 'E',
     templateUrl: './app/shared/datepicker/datepickerView.html',
+    link: link
+  };
+});
+
+evtApp.controller('datatableCtrl', function($scope, selectedDate, localdata) {
+  // $scope.jsonData = {};
+  // $scope.filteredData = {};
+
+  // fetch our data and expose it
+  localdata.fetch().then(function(response) {
+    $scope.jsonData = response;
+  });
+
+  $scope.getSelectedDate = getSelectedDate;
+  $scope.resetSelectedDate = resetSelectedDate;
+
+  // get our datepicker dates
+  function getSelectedDate() {
+    return selectedDate.get();
+  }
+
+  // reset our datepicker dates
+  function resetSelectedDate() {
+    return selectedDate.reset();
+  }
+
+});
+
+evtApp.directive('datatableDir', function() {
+
+  function link(scope, element, attrs) {
+
+    scope.selectedDate = scope.getSelectedDate();
+    scope.filter = {
+      rowStart: 0,
+      rowStop: 10,
+      orderKey: 'id'
+    };
+
+    // expose our functions
+    scope.orderBy = orderBy;
+    scope.resetFilters = resetFilters;
+    scope.addRows = addRows;
+
+    function orderBy(key) {
+      if (scope.filter.orderKey === key) {
+        scope.filter.orderKey = '-' + key;
+      } else {
+        scope.filter.orderKey = key;
+      }
+    }
+
+    function resetFilters() {
+      scope.filter = {
+        rowStart: 0,
+        rowStop: 10,
+        orderKey: 'id'
+      };
+      scope.selectedDate = scope.resetSelectedDate();
+    }
+
+    function addRows(number) {
+      scope.filter.rowStop += number;
+    }
+  }
+
+  return {
+    restrict: 'E',
+    templateUrl: './app/components/datatable/datatableView.html',
+    controller: 'datatableCtrl',
     link: link
   };
 });
