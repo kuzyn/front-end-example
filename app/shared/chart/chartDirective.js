@@ -15,9 +15,9 @@ evtApp.directive('chartDir', function($timeout) {
     function populateChart(data) {
       var chartDataObj = angular.copy(scope.dataChart);
       angular.forEach(data, function(item) {
-        holder.labels.push(item.city);
-        holder.data[0].push(item.price);
-        holder.data[1].push(Math.floor((item.end_date - item.start_date) / 86400000));
+        chartDataObj.labels.push(item.city);
+        chartDataObj.data[0].push(item.price);
+        chartDataObj.data[1].push(Math.floor((item.end_date - item.start_date) / 86400000));
       });
       return chartDataObj;
     }
